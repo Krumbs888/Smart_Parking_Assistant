@@ -58,6 +58,24 @@ void buzz(String vehicleState) {
   }
 }
 
+void light_up_LED(String LED){
+  if(LED == "red"){
+    digitalWrite(redLED, HIGH);
+    digitalWrite(yellowLED, LOW);
+    digitalWrite(greenLED, LOW);
+  }
+  if(LED == "yellow"){
+    digitalWrite(redLED, LOW);
+    digitalWrite(yellowLED, HIGH);
+    digitalWrite(greenLED, LOW);
+  }
+  if(LED == "green"){
+    digitalWrite(redLED, LOW);
+    digitalWrite(yellowLED, LOW);
+    digitalWrite(greenLED, HIGH);
+  }
+}
+
 void activate_distance_sensor() {
     digitalWrite(triggerPin, LOW);
     delayMicroseconds(triggerDelay);
@@ -82,9 +100,7 @@ void loop() {
   Serial.println("metres.");
 
   if (vehicleDistance <= 0.30  ) {
-    digitalWrite(redLED, LOW);
-    digitalWrite(greenLED, HIGH);
-    digitalWrite(yellowLED, LOW);
+    light_up_LED("green");
     if (goodBuzz == "unbuzzed") {
       buzz("Corrrect Spot");
       goodBuzz = "buzzed";
@@ -98,37 +114,27 @@ void loop() {
   }
 
   if (vehicleDistance > 0.7 && vehicleDistance < 1.0) {
-    digitalWrite(redLED, HIGH);
-    digitalWrite(greenLED, LOW);
-    digitalWrite(yellowLED, LOW);
+    light_up_LED("red");
     buzz("Far Away");
   }
 
   if (vehicleDistance >= 0.54 && vehicleDistance <= 0.7) {
-    digitalWrite(redLED, HIGH);
-    digitalWrite(greenLED, LOW);
-    digitalWrite(yellowLED, LOW);
+    light_up_LED("red");
     buzz("Getting Close");
   }
 
   if (vehicleDistance >= 0.39 && vehicleDistance <= 0.55) {
-    digitalWrite(redLED, LOW);
-    digitalWrite(greenLED, LOW);
-    digitalWrite(yellowLED, HIGH);
+    light_up_LED("yellow");
     buzz("Very Close");
   }
 
   if (vehicleDistance >= 0.29 && vehicleDistance <= 0.4) {
-    digitalWrite(redLED, LOW);
-    digitalWrite(greenLED, LOW);
-    digitalWrite(yellowLED, HIGH);
+    light_up_LED("yellow");
     buzz("SUPER CLOSE");
   }
 
   if (vehicleDistance < 0.05) {
-    digitalWrite(redLED, HIGH);
-    digitalWrite(greenLED, LOW);
-    digitalWrite(yellowLED, LOW);
+    light_up_LED("red");
     buzz("Too Close");
   }
 }
