@@ -8,7 +8,8 @@ int redLED = 8;
 
 int triggerDelay = 10;
 float travelTime = 0;
-float vehicleDistance = 0;
+float vehicleDistance = 0.3;
+float targetDistance = 0.3;
 int pause = 100;
 String goodBuzz = "";
 
@@ -99,7 +100,8 @@ void loop() {
   Serial.print(vehicleDistance);
   Serial.println("metres.");
 
-  if (vehicleDistance <= 0.30  ) {
+
+  if (vehicleDistance > (targetDistance*0.17) && vehicleDistance < (targetDistance)  ) {
     light_up_LED("green");
     if (goodBuzz == "unbuzzed") {
       buzz("Corrrect Spot");
@@ -113,27 +115,27 @@ void loop() {
     goodBuzz = "unbuzzed";
   }
 
-  if (vehicleDistance > 0.7 && vehicleDistance < 1.0) {
+  if (vehicleDistance > (targetDistance*2.3) && vehicleDistance < (targetDistance*3.3)) {
     light_up_LED("red");
     buzz("Far Away");
   }
 
-  if (vehicleDistance >= 0.54 && vehicleDistance <= 0.7) {
+  if (vehicleDistance > (targetDistance*1.8) && vehicleDistance < (targetDistance*2.3)) {
     light_up_LED("red");
     buzz("Getting Close");
   }
 
-  if (vehicleDistance >= 0.39 && vehicleDistance <= 0.55) {
+  if (vehicleDistance > (targetDistance*1.3) && vehicleDistance < (targetDistance*1.8)) {
     light_up_LED("yellow");
     buzz("Very Close");
   }
 
-  if (vehicleDistance >= 0.29 && vehicleDistance <= 0.4) {
+  if (vehicleDistance > (targetDistance*1.0) && vehicleDistance < (targetDistance*1.3)) {
     light_up_LED("yellow");
     buzz("SUPER CLOSE");
   }
 
-  if (vehicleDistance < 0.05) {
+  if (vehicleDistance < (targetDistance*0.17)) {
     light_up_LED("red");
     buzz("Too Close");
   }
