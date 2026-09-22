@@ -23,47 +23,38 @@ void setup() {
   Serial.begin(57600);
 }
 
+void buzz_tone(int delayHIGH, int delayLOW ){
+    digitalWrite(buzzPin, HIGH);
+    delay(delayHIGH);
+    digitalWrite(buzzPin, LOW);
+    delay(delayLOW);
+}
+
 void buzz(String vehicleState) {
   if (vehicleState == "Corrrect Spot") {
     for (int j = 0; j < 3; j++ ) {
-      digitalWrite(buzzPin, HIGH);
-      delay(20);
-      digitalWrite(buzzPin, LOW);
-      delay(80);
+      buzz_tone(20,80);
     }
   }
   
   if (vehicleState == "Far Away") {
-    digitalWrite(buzzPin, HIGH);
-    delay(500);
-    digitalWrite(buzzPin, LOW);
-    delay(150);
+    buzz_tone(500,150);
   }
 
   if (vehicleState == "Getting Close") {
-    digitalWrite(buzzPin, HIGH);
-    delay(250);
-    digitalWrite(buzzPin, LOW);
-    delay(100);
+    buzz_tone(250,100);
   }
 
   if (vehicleState == "Very Close") {
-    digitalWrite(buzzPin, HIGH);
-    delay(100);
-    digitalWrite(buzzPin, LOW);
+    buzz_tone(100,0);
   }
 
   if (vehicleState == "SUPER CLOSE") {
-    digitalWrite(buzzPin, HIGH);
-    delay(20);
-    digitalWrite(buzzPin, LOW);
+    buzz_tone(20,0);
   }
 
   if (vehicleState == "Too Close") {
-    digitalWrite(buzzPin, HIGH);
-    delay(500);
-    digitalWrite(buzzPin, LOW);
-    delay(150);
+    buzz_tone(500,150);
   }
 }
 
