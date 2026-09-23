@@ -16,6 +16,7 @@ float vehicleDistance = 0.3;
 float targetDistance = 0.3;
 int pause = 100;
 String goodBuzz = "unbuzzed";
+String objectState = "";
 
 void buzz_tone(int delayHIGH, int delayLOW ){
     digitalWrite(buzzPin, HIGH);
@@ -25,7 +26,9 @@ void buzz_tone(int delayHIGH, int delayLOW ){
 }
 
 void buzz(String vehicleState) {
-  if (vehicleState == "Corrrect Spot") {
+  objectState = vehicleState;
+  
+  if (vehicleState == "Correct Spot") {
     for (int j = 0; j < 3; j++ ) {
       buzz_tone(20,80);
     }
@@ -88,7 +91,24 @@ void activate_distance_sensor() {
 
     travelTime = pulseIn(echoPin, HIGH);
     delay(25);
+}
+void display_vehicle_distance(){
+  if(!(vehicleDistance == vehicleDistance)){
+    lcd.clear();
   }
+  if((objectState == objectState)){
+    lcd.clear();
+    //this lcd clear only works when using the current condition
+    //(objectState == objectState), instead of !(objectState == objectState)
+    //it is also the cause of the LCD 'choppy-ness'
+  }
+  lcd.setCursor(0,0);
+  lcd.print("objDist ");
+  lcd.print("= ");
+  lcd.print(vehicleDistance);
+  lcd.setCursor(0,1);
+  lcd.print(objectState);
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -105,12 +125,7 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  lcd.setCursor(0,0);
-  lcd.print("Testing");
-  lcd.setCursor(0,1);
-  lcd.print("Test Success");
-  
+  // put your main code here, to run repeatedly: 
   activate_distance_sensor();
 
   Serial.println(travelTime);
@@ -118,6 +133,8 @@ void loop() {
   Serial.print("VehicleDistance is : ");
   Serial.print(vehicleDistance);
   Serial.println("metres.");
+
+  display_vehicle_distance();
 
   if(vehicleDistance >= (targetDistance*3.3)){
     goodBuzz = "unbuzzed";
@@ -132,7 +149,7 @@ void loop() {
   else if(vehicleDistance < (targetDistance*1.0)){
     light_up_LED("green");
     if (goodBuzz == "unbuzzed") {
-      buzz("Corrrect Spot");
+      buzz("Correct Spot");
       goodBuzz = "buzzed";
     }
   }
@@ -156,6 +173,6 @@ void loop() {
     light_up_LED("red");
     buzz("Far Away");
   }
-
-  lcd.clear();
+  //an ascending chain of else if statements seems to be the best way to 
+  //measure a range of overlapping values
 }
