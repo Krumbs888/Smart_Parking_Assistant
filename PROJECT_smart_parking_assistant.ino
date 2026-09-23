@@ -15,7 +15,7 @@ float travelTime = 0;
 float vehicleDistance = 0.3;
 float targetDistance = 0.3;
 int pause = 100;
-String goodBuzz = "";
+String goodBuzz = "unbuzzed";
 
 void buzz_tone(int delayHIGH, int delayLOW ){
     digitalWrite(buzzPin, HIGH);
@@ -50,6 +50,9 @@ void buzz(String vehicleState) {
   if (vehicleState == "Too Close") {
     buzz_tone(500,150);
   }
+  if(vehicleState == "Too Far"){
+    buzz_tone(0,10);
+  }
 }
 
 void light_up_LED(String LED){
@@ -67,6 +70,11 @@ void light_up_LED(String LED){
     digitalWrite(redLED, LOW);
     digitalWrite(yellowLED, LOW);
     digitalWrite(greenLED, HIGH);
+  }
+  if(LED == "off"){
+    digitalWrite(redLED, LOW);
+    digitalWrite(yellowLED, LOW);
+    digitalWrite(greenLED, LOW);
   }
 }
 
@@ -111,44 +119,42 @@ void loop() {
   Serial.print(vehicleDistance);
   Serial.println("metres.");
 
-
-  if (vehicleDistance > (targetDistance*0.17) && vehicleDistance < (targetDistance)  ) {
+  if(vehicleDistance >= (targetDistance*3.3)){
+    goodBuzz = "unbuzzed";
+    light_up_LED("off");
+    buzz("Too Far");
+  }
+  else if(vehicleDistance < (targetDistance*0.17)){
+    goodBuzz = "unbuzzed";
+    light_up_LED("red");
+    buzz("Too Close");
+  }
+  else if(vehicleDistance < (targetDistance*1.0)){
     light_up_LED("green");
     if (goodBuzz == "unbuzzed") {
       buzz("Corrrect Spot");
       goodBuzz = "buzzed";
     }
   }
-  // extra if statement that checks 'goodBuzz' stops continuous buzzing
-  // goodBuzz = "buzzed" can be anything, it acts as a simple signifier
-  else {
-    digitalWrite(greenLED, LOW);
+  else if(vehicleDistance < (targetDistance*1.3)){
     goodBuzz = "unbuzzed";
-  }
-
-  if (vehicleDistance > (targetDistance*2.3) && vehicleDistance < (targetDistance*3.3)) {
-    light_up_LED("red");
-    buzz("Far Away");
-  }
-
-  if (vehicleDistance > (targetDistance*1.8) && vehicleDistance < (targetDistance*2.3)) {
-    light_up_LED("red");
-    buzz("Getting Close");
-  }
-
-  if (vehicleDistance > (targetDistance*1.3) && vehicleDistance < (targetDistance*1.8)) {
-    light_up_LED("yellow");
-    buzz("Very Close");
-  }
-
-  if (vehicleDistance > (targetDistance*1.0) && vehicleDistance < (targetDistance*1.3)) {
     light_up_LED("yellow");
     buzz("SUPER CLOSE");
   }
-
-  if (vehicleDistance < (targetDistance*0.17)) {
+  else if(vehicleDistance < (targetDistance*1.8)){
+    goodBuzz = "unbuzzed";
+    light_up_LED("yellow");
+    buzz("Very Close");
+  }
+  else if(vehicleDistance < (targetDistance*2.3)){
+    goodBuzz = "unbuzzed";
     light_up_LED("red");
-    buzz("Too Close");
+    buzz("Getting Close");
+  }
+  else if(vehicleDistance < (targetDistance*3.3)){
+    goodBuzz = "unbuzzed";
+    light_up_LED("red");
+    buzz("Far Away");
   }
 
   lcd.clear();
