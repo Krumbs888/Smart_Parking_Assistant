@@ -1,3 +1,7 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
 int echoPin = 3;
 int triggerPin = 6;
 int buzzPin = 11;
@@ -12,17 +16,6 @@ float vehicleDistance = 0.3;
 float targetDistance = 0.3;
 int pause = 100;
 String goodBuzz = "";
-
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(echoPin, INPUT);
-  pinMode(triggerPin, OUTPUT);
-  pinMode(buzzPin, OUTPUT);
-  pinMode(greenLED, OUTPUT);
-  pinMode(yellowLED, OUTPUT);
-  pinMode(redLED, OUTPUT);
-  Serial.begin(57600);
-}
 
 void buzz_tone(int delayHIGH, int delayLOW ){
     digitalWrite(buzzPin, HIGH);
@@ -89,9 +82,27 @@ void activate_distance_sensor() {
     delay(25);
   }
 
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(echoPin, INPUT);
+  pinMode(triggerPin, OUTPUT);
+  pinMode(buzzPin, OUTPUT);
+  pinMode(greenLED, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
+  Serial.begin(57600);
+
+  lcd.begin(16,2);
+  lcd.backlight();
+}
 
 void loop() {
   // put your main code here, to run repeatedly:
+  lcd.setCursor(0,0);
+  lcd.print("Testing");
+  lcd.setCursor(0,1);
+  lcd.print("Test Success");
+  
   activate_distance_sensor();
 
   Serial.println(travelTime);
@@ -139,4 +150,6 @@ void loop() {
     light_up_LED("red");
     buzz("Too Close");
   }
+
+  lcd.clear();
 }
