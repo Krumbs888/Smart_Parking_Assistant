@@ -1,4 +1,5 @@
 #include <LiquidCrystal_I2C.h>
+#include <Wire.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -12,6 +13,9 @@ int buzzPin = 11;
 int greenLED = 10;
 int yellowLED = 9;
 int redLED = 8;
+
+int pushButtonPin = 13;
+int potReadPin = A0;
 
 //================================================================================================================================================================================================
 // DELAYS
@@ -32,6 +36,21 @@ float distanceJumpThreshold = 0.3;
 //================================================================================================================================================================================================
 String goodBuzz = "unbuzzed";
 String objectState = "";
+
+//=====================================================================================================================================================================================
+// CALIBRATION VARIABLES
+//=====================================================================================================================================================================================
+int potReading = 0;
+
+//=====================================================================================================================================================================================
+// TOGGLE PARAMETERS/ARGUMENTS (is this the right use of parameters and arguments?)
+//=====================================================================================================================================================================================
+int newButtonValue = 0;
+int oldButtonValue = 0;
+String calibrationState = "toggled";
+//program says calibrationState starts as "toggled"
+//but on my arduino it actually switches to the exact opposite
+//of what it is initially set as (i.e in this case its actually "untoggled")
 
 //================================================================================================================================================================================================
 // BUZZER LOGIC
@@ -243,6 +262,56 @@ void indicate_vehicle_distance() {
   //measure a range of overlapping values
 }
 
+//=====================================================================================================================================================================================
+// CALIBRATION VALUE READING/MEASUREMENT 
+//=====================================================================================================================================================================================
+void read_button_value() {
+  oldButtonValue = newButtonValue;
+  newButtonValue = digitalRead(pushButtonPin);
+  Serial.print("button value is ");
+  Serial.println(newButtonValue);
+}
+void read_pot_value() {
+  potReading = analogRead(potReadPin);
+  Serial.print("Potentiometer Reading is ");
+  Serial.println(potReading);
+}
+
+void calculate_targetDistance(){
+  targetDistance = ((0.85 / 1023) * potReading) + 0.15;
+  Serial.print("Target Distance is now ");
+  Serial.print(targetDistance);
+  Serial.println("m.");
+  Serial.println();
+  //lower limit is 0.15m, any lower and sensor might bug out
+  //upper limit is 1m, any higher and sensor WILL bug out
+}
+
+//=====================================================================================================================================================================================
+// TOGGLE DECISION MAKING
+//=====================================================================================================================================================================================
+bool button_is_toggled() {
+  read_button_value();
+  if (oldButtonValue == 0 && newButtonValue == 1) {
+    delay(30);
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+void check_calibration_state(){
+  if (button_is_toggled() == 1) {
+    if(calibrationState ==  "toggled"){
+      calibrationState = "untoggled";
+    }
+    else{
+      calibrationState = "toggled";
+    }
+  }
+}
+
 //================================================================================================================================================================================================
 // SETUP
 //================================================================================================================================================================================================
@@ -250,11 +319,17 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(echoPin, INPUT);
   pinMode(triggerPin, OUTPUT);
+
   pinMode(buzzPin, OUTPUT);
+
   pinMode(greenLED, OUTPUT);
   pinMode(yellowLED, OUTPUT);
   pinMode(redLED, OUTPUT);
-  Serial.begin(57600);
+
+  pinMode(pushButtonPin, INPUT);
+  pinMode(potReadPin, INPUT);
+
+  Serial.begin(9600);
 
   lcd.begin(16, 2);
   lcd.backlight();
@@ -265,12 +340,36 @@ void setup() {
 //================================================================================================================================================================================================
 void loop() {
   // put your main code here, to run repeatedly:
+  check_calibration_state();
+
+  if(calibrationState == "untoggled"){
   activate_distance_sensor();
-
   measure_vehicle_distance();
-
   display_vehicle_distance();
-
   indicate_vehicle_distance();
+
+  check_calibration_state();
+  }
+  if(calibrationState == "toggled"){
+    for(int i = 0; i < 1; i++){
+      while(i == 0){
+
+
+        read_pot_value();
+        if(potReading == 0){
+          i++;
+        }
+        if(potReading == 1023){
+          calibrationState == "untoggled";
+        }
+      }
+    }
+
+    while(calibrationState == "toggled"){
+      read_pot_value();
+      calculate_targetDistance();
+      check_calibration_state();
+    }
+  }
 
 }
