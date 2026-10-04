@@ -187,6 +187,69 @@ void display_vehicle_distance() {
   lcd.print(objectState);
 }
 
+void display_calibration_distance(){
+  lcd.setCursor(0,0);
+  lcd.print("Calibration Mode");
+  
+  lcd.setCursor(0,1);
+  lcd.print("targetDist= ");
+  lcd.print(targetDistance);
+  delay(100);
+  lcd.clear();
+}
+
+void display_startup_arrow(String startupArrow){
+    lcd.setCursor(0,0);
+    lcd.print("Set TargetDist?");
+    lcd.setCursor(0,1);
+    lcd.print(startupArrow);
+    delay(100);
+    lcd.clear();
+}
+
+void display_calibration_startup(){
+  int arrowThreshold[] = {161,282,403,525,535,656,777,898,1019};
+  
+  if(potReading <= 40){
+    delay(1000);
+    return;
+  }
+  if(potReading >= 1020){
+    delay(1000);
+    return;
+  }
+
+  if(potReading < arrowThreshold[0] ){
+    display_startup_arrow("YES <---o     NO");
+  }
+  else if(potReading < arrowThreshold[1]){
+    display_startup_arrow("YES  <--o     NO");
+  }
+  else if(potReading < arrowThreshold[2]){
+    display_startup_arrow("YES   <-o     NO");
+  }
+  else if(potReading < arrowThreshold[3]){
+    display_startup_arrow("YES    <o     NO");
+  }
+  else if(potReading < arrowThreshold[4]){
+    display_startup_arrow("YES     o     NO");
+  }
+  else if(potReading < arrowThreshold[5]){
+    display_startup_arrow("YES     o>    NO");
+  }
+  else if(potReading < arrowThreshold[6]){
+    display_startup_arrow("YES     o->   NO");
+  }
+  else if(potReading < arrowThreshold[7]){
+    display_startup_arrow("YES     o-->  NO");
+  }
+  else if(potReading < arrowThreshold[8]){
+    display_startup_arrow("YES     o---> NO");
+  }
+  
+}
+
+
 //================================================================================================================================================================================================
 // MISC/DECISION MAKING
 //================================================================================================================================================================================================
@@ -215,10 +278,12 @@ void indicate_vehicle_distance() {
     display_vehicle_distance();
     }
   }
-  // made the above delay 10 millisecs because it takes the sensor about 30millisecs
-  // to register a new reading and anything longer might have significant effects on
-  // the buzzer delays.
-  //even 10 millisecs is doing a lot
+  /*
+   made the above delay 10 millisecs because it takes the sensor about 30millisecs
+   to register a new reading and anything longer might have significant effects on
+   the buzzer delays.
+  even 10 millisecs is doing a lot
+  */
   else {
     if (vehicleDistance >= (targetDistance * 3.3)) {
       goodBuzz = "unbuzzed";
@@ -262,6 +327,27 @@ void indicate_vehicle_distance() {
   //measure a range of overlapping values
 }
 
+void run_calibration_startup(){
+  for(int i = 0; i < 1; i++){
+      while(i == 0){
+        //run startup_display
+        display_calibration_startup();
+        read_pot_value();
+        if(potReading < 40){
+          i++;
+        }
+        if(potReading > 1020){
+          i++;
+          calibrationState = "untoggled";
+          /*
+          lots of electrical noise so 
+          lower limit is 40 instead of 0 and
+          upper limit is 1020 instead of 1023
+          */
+        }
+      }
+}
+
 //=====================================================================================================================================================================================
 // CALIBRATION VALUE READING/MEASUREMENT 
 //=====================================================================================================================================================================================
@@ -283,8 +369,15 @@ void calculate_targetDistance(){
   Serial.print(targetDistance);
   Serial.println("m.");
   Serial.println();
-  //lower limit is 0.15m, any lower and sensor might bug out
-  //upper limit is 1m, any higher and sensor WILL bug out
+
+  display_calibration_distance();
+  /*
+  lower limit is 0.15m, any lower and sensor might bug out
+  upper limit is 1m, any higher and sensor WILL bug out
+
+  due to a lot of electrical background noise
+  its more like 0.18m to 0.99m (and I can honestly live with this)
+  */
 }
 
 //=====================================================================================================================================================================================
@@ -351,18 +444,7 @@ void loop() {
   check_calibration_state();
   }
   if(calibrationState == "toggled"){
-    for(int i = 0; i < 1; i++){
-      while(i == 0){
-
-
-        read_pot_value();
-        if(potReading == 0){
-          i++;
-        }
-        if(potReading == 1023){
-          calibrationState == "untoggled";
-        }
-      }
+    run_calibration_startup();
     }
 
     while(calibrationState == "toggled"){
