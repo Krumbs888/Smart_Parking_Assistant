@@ -2,6 +2,8 @@
 #include <Wire.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+// for Proteus simulation, change lcd address
+// from 0x27 to 0x3F
 
 //================================================================================================================================================================================================
 // HARDWWARE PIN CONNECTIONS
@@ -100,6 +102,10 @@ void buzz(String vehicleState) {
     buzz_tone(0, 10);
     return 0;
   }
+  if(vehicleState == "Calibration Mode"){
+    buzz_tone(250,100);
+    return 0;
+  }
 }
 
 //================================================================================================================================================================================================
@@ -125,6 +131,11 @@ void light_up_LED(String LED) {
     digitalWrite(redLED, LOW);
     digitalWrite(yellowLED, LOW);
     digitalWrite(greenLED, LOW);
+  }
+  if(LED == "Calibration Mode"){
+    digitalWrite(redLED, HIGH);
+    digitalWrite(yellowLED, HIGH);
+    digitalWrite(greenLED, HIGH);
   }
 }
 
@@ -167,7 +178,7 @@ void confirm_vehicle_distance() {
 }
 
 //================================================================================================================================================================================================
-// DISTANCE DISPLAY
+// DISTANCE LCD DISPLAY
 //================================================================================================================================================================================================
 void display_vehicle_distance() {
   if (!(vehicleDistance == vehicleDistance)) {
@@ -327,16 +338,26 @@ void indicate_vehicle_distance() {
   //measure a range of overlapping values
 }
 
+void calibration_blink(){
+  for(int i; i < 3; i++){
+  light_up_LED("Calibration Mode");
+  buzz("Calibration Mode");
+  }
+  light_up_LED("off");
+  goodBuzz = "unbuzzed";
+}
+
+
 void run_calibration_startup(){
   for(int i = 0; i < 1; i++){
       while(i == 0){
         //run startup_display
         display_calibration_startup();
         read_pot_value();
-        if(potReading < 40){
+        if(potReading <= 40){
           i++;
         }
-        if(potReading > 1020){
+        if(potReading >= 1020){
           i++;
           calibrationState = "untoggled";
           /*
@@ -346,6 +367,7 @@ void run_calibration_startup(){
           */
         }
       }
+    }
 }
 
 //=====================================================================================================================================================================================
@@ -444,14 +466,15 @@ void loop() {
   check_calibration_state();
   }
   if(calibrationState == "toggled"){
+    calibration_blink();
     run_calibration_startup();
-    }
-
+    
     while(calibrationState == "toggled"){
       read_pot_value();
       calculate_targetDistance();
       check_calibration_state();
     }
+    calibration_blink();
   }
 
 }
