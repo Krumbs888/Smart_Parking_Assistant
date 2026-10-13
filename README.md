@@ -69,7 +69,7 @@ Smart_Parking_Assistant/
 
 ## Future Improvements
 - **Automated Calibration** - Add a feature that allows the assistant to automatically suggest/set an optimal target parking distance dependant on the size of the car and the parking garage.
-- **Power Source** - Remove dependancy on The arduino board for power supply. A dedicated power supply will power will reduce electrical noise and also allow for a more portable build.
+- **Power Source** - Remove dependancy on the arduino board for power supply. A dedicated power supply will power will reduce electrical noise and also allow for a more portable build.
 
 ## Contributions
 All contributions are **greatly** appreciated.
