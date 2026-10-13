@@ -12,5 +12,31 @@ It makes use of an ultrasonic distance sensor to detect nearby obstacles and pro
 - **Distance Measurement** — Uses an ultrasonic sensor to measure the distance between the vehicle and the parking obstacle.
 - **LCD Display** — Displays the measured distance in real time.
 - **Visual & Audible Parking Feedback** — Three LEDs and a buzzer provide feedback based on how close the vehicle is to the desired parking distance.
-- **Adjustable Parking Distance** — Includes a calibration mode that allows the target parking distance to be manually adjusted using a push button.
+- **Adjustable Parking Distance** — Includes a calibration mode that allows the target parking distance to be manually adjusted using a potentiometer
 - **Calibration Mode Startup** — When entering calibration mode, the system displays a short startup interface that allows the user to either proceed with calibration or return to normal operation. If calibration is skipped, the existing target distance remains unchanged.
+
+## Hardware
+- Arduino UNO
+- Ultrasonic sensor - HC-SR04
+- 16x2 LCD
+- Buzzer
+- Potentiometer
+- 3 LEDs (red, green, yellow)
+- 3 220 ohm resistors
+
+## Software
+- Arduino IDE
+- Proteus Design Suite
+
+## Limitations
+- The system only measures the distance in front and cannot detect obstacles to the side of the vehicle
+- **Electrical Noise** - I did not have access to an external power source while building this, so all power is supplied from the arduino, causing some issues when reading from both the sensor and the potentiometer
+
+## Future Improvements
+-
+
+## Contributions
+All contributions are **greatly** appreciated.
+
+## License
+Distributed under the MIT License. See LICENSE.txt for more info.
