@@ -29,13 +29,12 @@ It makes use of an ultrasonic distance sensor to detect nearby obstacles and pro
 - Proteus Design Suite
 
 ## Limitations
-- **Limited Sensor Capabilities** The system only measures the distance in front and cannot detect obstacles to the side of the vehicle.
-- **Electrical Noise** - I did not have access to an external power source while building this, so all power is supplied from the arduino, causing some issues when reading from both the sensor and the potentiometer.
+- **Limited Sensor Capabilities** - The system only measures the distance in front of the vehicle and cannot detect obstacles to the side of the vehicle.
+- **Electrical Noise** - Did not have access to an external power source while building this, so all power is supplied from the arduino, causing some issues when reading from both the sensor and the potentiometer.
 
 ## Future Improvements
-- **Automated Calibration** - Add a feature that allows the assistant to automatically suggest/set an optjmal target parking distance dependant on the size of the car the parking garage
-- **Power Source** - Remove dependancy on The arduino board for power supply. A dedicated power supply will power will reduce electrical noise and also allow for a more portable build
--
+- **Automated Calibration** - Add a feature that allows the assistant to automatically suggest/set an optimal target parking distance dependant on the size of the car and the parking garage.
+- **Power Source** - Remove dependancy on The arduino board for power supply. A dedicated power supply will power will reduce electrical noise and also allow for a more portable build.
 
 ## Contributions
 All contributions are **greatly** appreciated.
