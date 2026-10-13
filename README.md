@@ -28,6 +28,27 @@ It makes use of an ultrasonic distance sensor to detect nearby obstacles and pro
 - Arduino IDE
 - Proteus Design Suite
 
+## Project Structure
+
+The repository contains the main Arduino program, the Proteus simulation file, and a small collection of component tests used during development.
+
+```text
+Smart_Parking_Assistant/
+│
+├── PROJECT_smart_parking_assistant.ino
+├── LICENSE
+├── README.md
+│
+├── PROTEUS/
+│   ├── Smart_Parking_Assistant.pdsprj
+│
+└── TEST/
+    └── test_potentiometer_and_button.ino
+```
+
+## Wiring
+
+
 ## Limitations
 - **Limited Sensor Capabilities** - The system only measures the distance in front of the vehicle and cannot detect obstacles to the side of the vehicle.
 - **Electrical Noise** - Did not have access to an external power source while building this, so all power is supplied from the arduino, causing some issues when reading from both the sensor and the potentiometer.
