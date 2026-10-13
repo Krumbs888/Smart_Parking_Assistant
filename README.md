@@ -19,8 +19,10 @@ It makes use of an ultrasonic distance sensor to detect nearby obstacles and pro
 - Arduino UNO
 - Ultrasonic sensor - HC-SR04
 - 16x2 LCD
+- LCD I2C Backpack
 - Buzzer
 - Potentiometer
+- Push button
 - 3 LEDs (red, green, yellow)
 - 3 220 ohm resistors
 
@@ -28,7 +30,7 @@ It makes use of an ultrasonic distance sensor to detect nearby obstacles and pro
 - Arduino IDE
 - Proteus Design Suite
 
-## Project Structure
+## Repository Structure
 
 The repository contains the main Arduino program, the Proteus simulation file, and a small collection of component tests used during development.
 
@@ -47,6 +49,18 @@ Smart_Parking_Assistant/
 ```
 
 ## Wiring
+| Arduino UNO pin | Component |
+|---|---|
+| 3 | HC-SR04 Echo Pin |
+| 6 | HC-SR04 Trig Pin |
+| 8 | Red LED |
+| 9 | Yellow LED |
+| 10 | Green LED |
+| 11 | Buzzer |
+| 13 | Push Button |
+| A0 | Potentiometer |
+| A4 | LCD SDA Pin|
+| A5 | LCD SCL Pin |
 
 
 ## Limitations
