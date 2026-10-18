@@ -4,6 +4,8 @@ An Arduino-based parking assistant designed to help drivers judge the distance b
 
 ## what this is❓️
 
+![Full Build Image](full_build.jpg)
+
 The Smart Parking Assistant is a personal Arduino project built to assist drivers when parking in an enclosed space, such as a garage
 
 It makes use of an ultrasonic distance sensor to detect nearby obstacles and provides feedback through an LCD and buzzer. The project also includes a Proteus simulation for testing and debugging the circuit and program logic.
@@ -16,6 +18,9 @@ It makes use of an ultrasonic distance sensor to detect nearby obstacles and pro
 - **Calibration Mode Startup** — When entering calibration mode, the system displays a short startup interface that allows the user to either proceed with calibration or return to normal operation. If calibration is skipped, the existing target distance remains unchanged.
 
 ## 🛠 Hardware 
+
+![Components Image](/assets/components.jpg)
+
 - Arduino UNO
 - Ultrasonic sensor - HC-SR04
 - 16x2 LCD
@@ -49,6 +54,9 @@ Smart_Parking_Assistant/
 ```
 
 ## Wiring
+
+![Schematic Capture Image](/assets/Schematic_Capture.png)
+
 | Arduino UNO pin | Component |
 |---|---|
 | 3 | HC-SR04 Echo Pin |
